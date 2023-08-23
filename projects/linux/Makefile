@@ -1,6 +1,12 @@
 #
 # makefile for Linux project in Reliance Edge
 #
+GCCBIN="C:/arm-gnu-toolchain-12.2.rel1-mingw-w64-i686-arm-none-linux-gnueabihf/bin"
+CROSS_COMPILE = $(GCCBIN)/arm-none-linux-gnueabihf-
+B_HOSTOS=linux
+P_PROJDIR := $(shell busybox.exe pwd)
+P_BASEDIR := $(shell busybox.exe readlink -f $(P_PROJDIR)/../..)
+
 P_PROJDIR ?= $(shell pwd)
 P_BASEDIR ?= $(shell readlink -f $(P_PROJDIR)/../..)
 
