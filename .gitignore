@@ -41,7 +41,7 @@
 *.user
 *.atsuo
 *.pro.user
-.vscode
+#.vscode
 
 #
 # Ignore Doxygen output directories and artifacts
@@ -59,3 +59,5 @@ GPATH
 GSYMS
 GRTAGS
 GTAGS
+
+.gdb_history

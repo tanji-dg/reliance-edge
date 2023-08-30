@@ -1,0 +1,46 @@
+{
+    // IntelliSense を使用して利用可能な属性を学べます。
+    // 既存の属性の説明をホバーして表示します。
+    // 詳細情報は次を確認してください: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+
+        {
+            "name": "(arm-none-linux-gnueabihf-gdb) 起動",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceRoot}/projects/linux/host/redfuse",
+            "args": [ "--vol=0", "--dev=/dev/nbd0", "/tmp/sfram",  "-f", "-d" ],
+            "stopAtEntry": true,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": true,
+            "subProcess": true, // マルチスレッド
+            "MIMode": "gdb",
+            "miDebuggerPath": "${config:dg.ag6r.gcc_bin_dir}/arm-none-linux-gnueabihf-gdb.exe",
+            "setupCommands": [
+                {
+                    "description": "gdb の再フォーマットを有効にする",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "ターゲットの共有ライブラリを解決",
+                    "text": "set sysroot target:/",
+                    "ignoreFailures": false
+                },
+                {
+                    "description": "LAN接続",
+                    "text": "-target-select extended-remote ${config:dg.ag6r.target_ip}:${config:dg.ag6r.target_gdbserver_port}",
+                    "ignoreFailures": false
+                },
+                {
+                    "description": "起動ファイル指定(-gdb-set remote)",
+                    "text": "-gdb-set remote exec-file /home/root/redfuse",
+                    "ignoreFailures": false
+                }
+            ],
+            //"postDebugTask": "dg: debugEndTask"
+        }
+    ]
+}

@@ -1,0 +1,24 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		},
+		{
+			"name": "root",
+			"path": "../../sfram_drv_test"
+		},
+		{
+			"path": "C:/Users/tanji/ag6rhome"
+		}
+	],
+	"settings": {
+		"dg.ag6r.gcc_bin_dir": "C:/gcc-arm-10.2-2020.11-mingw-w64-i686-arm-none-linux-gnueabihf/bin",
+	    "dg.ag6r.target_root": "/mnt/romroot",
+    	"dg.ag6r.target_gdbserver_port": "10000",
+		"files.associations": {
+			"*.json": "jsonc",
+			"fuse.h": "c",
+			"stdlib.h": "c"
+		}
+	},
+}

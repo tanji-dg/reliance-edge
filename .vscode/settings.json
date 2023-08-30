@@ -1,0 +1,16 @@
+{
+    "files.exclude": {
+        "**/freertos": true,
+        "**/stub": true,
+        "**/u-boot": true,
+        "**/win32-boot": true,
+        "**/newproj": true,
+        "**/win32/**": true,
+        // 他の除外ディレクトリもここに追加可能
+    },
+    "files.associations": {
+        "*.json": "jsonc",
+        "stdlib.h": "c",
+        "fuse.h": "c"
+    },
+}

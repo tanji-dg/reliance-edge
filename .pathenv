@@ -1,0 +1,1 @@
+PATH=$(readlink -f $PWD/../sfram_drv_test/Tool/bin):$PATH

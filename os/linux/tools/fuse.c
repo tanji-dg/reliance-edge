@@ -27,7 +27,7 @@
     @brief Implements a Reliance Edge FUSE (File System in User Space) port
            for Linux.
 */
-#define FUSE_USE_VERSION 26
+#define FUSE_USE_VERSION 29
 #include <fuse.h>
 #include <stdlib.h>
 #include <stdio.h>

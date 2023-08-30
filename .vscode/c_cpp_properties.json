@@ -1,0 +1,22 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${workspaceFolder:root}/DUKE_SDK/ag6r/linux/sysroot/usr/include"
+            ],
+            "windowsSdkVersion": "10.0.19041.0",
+            "compilerPath": "C:/arm-gnu-toolchain-12.2.rel1-mingw-w64-i686-arm-none-linux-gnueabihf/bin/arm-none-linux-gnueabihf-gcc.exe",
+            "cStandard": "c11",
+            "cppStandard": "c++11",
+            "intelliSenseMode": "linux-gcc-arm",
+            //"defines": [],
+            //"compilerPath": "/usr/bin/gcc",
+            //"cStandard": "gnu17",
+            //"cppStandard": "gnu++14",
+            //"intelliSenseMode": "linux-gcc-x64"
+        }
+    ],
+    "version": 4
+}
