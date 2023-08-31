@@ -51,14 +51,16 @@ $(P_BASEDIR)/os/$(P_OS)/tools/fuse.$(B_OBJEXT):		$(P_BASEDIR)/os/$(P_OS)/tools/f
 # to inherit its settings, so add it as a dependency.
 $(P_PROJDIR)/redconf.$(B_OBJEXT):	$(P_CONFDIR)/redconf.c
 
+libred.so: $(REDDRIVOBJ) $(REDTOOLOBJ)
+	$(B_CC) $(B_CFLAGS) -shared $^ -o $@
 
-redfmt: $(P_BASEDIR)/os/$(P_OS)/tools/$(REDTOOLPREFIX)fmt.$(B_OBJEXT) $(REDDRIVOBJ) $(REDTOOLOBJ)
+redfmt: $(P_BASEDIR)/os/$(P_OS)/tools/$(REDTOOLPREFIX)fmt.$(B_OBJEXT) libred.so
 	$(B_LDCMD)
 
-redimgbld: $(IMGBLDOBJ) $(REDDRIVOBJ) $(REDTOOLOBJ)
+redimgbld: $(IMGBLDOBJ) libred.so
 	$(B_LDCMD)
 
-redfuse: $(P_BASEDIR)/os/$(P_OS)/tools/fuse.$(B_OBJEXT) $(REDTOOLOBJ) $(REDFUSEDRIVOBJ)
+redfuse: $(P_BASEDIR)/os/$(P_OS)/tools/fuse.$(B_OBJEXT) libred.so
 	$(B_CC) $^ $(LDFLAGS) -lfuse -o $@
 
 .PHONY: clean
@@ -66,4 +68,7 @@ clean:
 	$(B_DEL) $(REDDRIVOBJ) $(REDTOOLOBJ) $(REDPROJOBJ)
 	$(B_DEL) $(P_BASEDIR)/os/$(P_OS)/tools/*.$(B_OBJEXT)
 	$(B_DEL) $(P_BASEDIR)/tools/*.$(B_OBJEXT)
-	$(B_DEL) redfmt redimgbld redfuse
+	$(B_DEL) redfmt redimgbld redfuse libred.so
+
+$(REDDRIVOBJ) $(REDTOOLOBJ): %.$(B_OBJEXT): %.c
+	$(B_CC) -fPIC $(B_CFLAGS) $(INCLUDES) -x c -c $< -o $@

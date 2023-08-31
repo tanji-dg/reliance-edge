@@ -11,11 +11,7 @@
             "cStandard": "c11",
             "cppStandard": "c++11",
             "intelliSenseMode": "linux-gcc-arm",
-            //"defines": [],
-            //"compilerPath": "/usr/bin/gcc",
-            //"cStandard": "gnu17",
-            //"cppStandard": "gnu++14",
-            //"intelliSenseMode": "linux-gcc-x64"
+            "configurationProvider": "ms-vscode.makefile-tools"
         }
     ],
     "version": 4

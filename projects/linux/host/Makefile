@@ -6,8 +6,11 @@ CROSS_COMPILE = $(GCCBIN)/arm-none-linux-gnueabihf-
 B_HOSTOS=linux
 OS=linux
 P_CFLAGS=-I ../../../../sfram_drv_test/DUKE_SDK/ag6r/linux/sysroot/usr/include
-LDFLAGS=-L ../../../../sfram_drv_test/DUKE_SDK/ag6r/linux/sysroot/usr/lib -g
-B_DEBUG = 1
+LDFLAGS=-L ../../../../sfram_drv_test/DUKE_SDK/ag6r/linux/sysroot/usr/lib
+LDFLAGS+=-s
+B_CFLAGS=-s
+#LDFLAGS+=-g
+#B_DEBUG = 1
 
 P_BASEDIR ?= ../../..
 P_PROJDIR ?= $(P_BASEDIR)/projects/linux/host

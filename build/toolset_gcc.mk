@@ -15,6 +15,8 @@ B_CINCCMD = -I
 B_CFLAGS +=-Wall $(P_CFLAGS)
 ifneq ($(B_DEBUG),0)
 B_CFLAGS +=-g
+else
+B_CFLAGS +=-O
 endif
 B_LDCMD=$(B_CC) $(B_CFLAGS) $^ -o $@
 B_CLEANEXTRA=

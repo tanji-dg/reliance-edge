@@ -10,11 +10,14 @@ P_BASEDIR := $(shell busybox.exe readlink -f $(P_PROJDIR)/../..)
 P_PROJDIR ?= $(shell pwd)
 P_BASEDIR ?= $(shell readlink -f $(P_PROJDIR)/../..)
 
-B_DEBUG ?= 1
+B_DEBUG = 0
+#B_DEBUG ?= 1
 
 P_CFLAGS +=-Werror
 ifneq ($(B_DEBUG),0)
 P_CFLAGS +=-DDEBUG
+else
+P_CFLAGS +=-O
 endif
 
 .PHONY: all
@@ -31,7 +34,7 @@ REDPROJOBJ=\
 
 $(P_PROJDIR)/fsstress_main.$(B_OBJEXT):		$(P_PROJDIR)/fsstress_main.c $(REDHDR)
 
-fsstress: $(P_PROJDIR)/fsstress_main.$(B_OBJEXT) $(REDALLOBJ)
+fsstress: $(P_PROJDIR)/fsstress_main.$(B_OBJEXT) $(REDTESTOBJ) host/libred.so
 	$(B_LDCMD)
 
 .PHONY: clean
