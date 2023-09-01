@@ -34,8 +34,8 @@ REDPROJOBJ=\
 
 $(P_PROJDIR)/fsstress_main.$(B_OBJEXT):		$(P_PROJDIR)/fsstress_main.c $(REDHDR)
 
-fsstress: $(P_PROJDIR)/fsstress_main.$(B_OBJEXT) $(REDTESTOBJ) host/libred.so
-	$(B_LDCMD)
+fsstress: $(P_PROJDIR)/fsstress_main.$(B_OBJEXT) $(REDTESTOBJ)
+	$(B_LDCMD) -Lhost -lred
 
 .PHONY: clean
 clean:

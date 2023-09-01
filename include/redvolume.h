@@ -113,7 +113,7 @@ typedef struct
   #define VOLCONF_CONST const
 #endif
 
-extern VOLCONF_CONST VOLCONF gaRedVolConf[REDCONF_VOLUME_COUNT];
+extern VOLCONF gaRedVolConf[REDCONF_VOLUME_COUNT];
 extern const VOLCONF * CONST_IF_ONE_VOLUME gpRedVolConf;
 
 

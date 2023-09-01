@@ -11,13 +11,12 @@
 #include <redvolume.h>
 
 
-const VOLCONF gaRedVolConf[REDCONF_VOLUME_COUNT] =
+VOLCONF gaRedVolConf[REDCONF_VOLUME_COUNT] =
 {
-    //{ 512U, 524288U, 0U, false, 10000U, 0U, "VOL0:" },
-    { 0U, 0U, 0U, false, 100U, 0U, "VOL0:" },
-    { 1024U, 16384U, 0U, false, 10U, 0U, "VOL1:" },
-    { 512U, 65536U, 0U, false, 100U, 0U, "VOL2:" },
-    { 1024U, 16384U, 0U, false, 10U, 0U, "VOL3:" },
-    { 512U, 65536U, 0U, false, 100U, 0U, "VOL4:" },
-    { 2048U, 32768U, 0U, false, 10U, 0U, "VOL5:" }
+    { 0U, 0U, 0U, false, 0U, 0U, "VOL0:" },
+    { 0U, 0U, 0U, false, 0U, 0U, "VOL1:" },
+    { 0U, 0U, 0U, false, 0U, 0U, "VOL2:" },
+    { 0U, 0U, 0U, false, 0U, 0U, "VOL3:" },
+    { 0U, 0U, 0U, false, 0U, 0U, "VOL4:" },
+    { 0U, 0U, 0U, false, 0U, 0U, "VOL5:" },
 };

@@ -70,7 +70,9 @@ REDDRIVOBJ=\
 	$(P_BASEDIR)/util/perm.$(B_OBJEXT) \
 	$(P_BASEDIR)/util/sign.$(B_OBJEXT) \
 	$(P_BASEDIR)/util/string.$(B_OBJEXT) \
-	$(P_PROJDIR)/redconf.$(B_OBJEXT)
+	$(P_PROJDIR)/redconf.$(B_OBJEXT) \
+	$(P_PROJDIR)/config.$(B_OBJEXT)
+
 
 # Additional objects necessary to build the host tools.
 REDTOOLOBJ=\

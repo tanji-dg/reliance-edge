@@ -34,6 +34,9 @@
 
 #include <redfs.h>
 
+#include <redvolume.h>
+#include "config.h"
+
 #if (REDCONF_READ_ONLY == 0) && (((REDCONF_API_POSIX == 1) && (REDCONF_API_POSIX_FORMAT == 1)) || (REDCONF_IMAGE_BUILDER == 1))
 
 #include <redgetopt.h>
@@ -65,6 +68,7 @@ int main(
         { "version", red_required_argument, NULL, 'V' },
         { "inodes", red_required_argument, NULL, 'N' },
         { "dev", red_required_argument, NULL, 'D' },
+        { "volconf", red_required_argument, NULL, 'C' },
         { "help", red_no_argument, NULL, 'H' },
         { NULL }
     };
@@ -78,7 +82,7 @@ int main(
         goto Help;
     }
 
-    while((c = RedGetoptLong(argc, argv, "V:N:D:H", aLongopts, NULL)) != -1)
+    while((c = RedGetoptLong(argc, argv, "V:N:D:C:H", aLongopts, NULL)) != -1)
     {
         switch(c)
         {
@@ -137,6 +141,9 @@ int main(
             case 'D': /* --dev */
                 pszDrive = red_optarg;
                 break;
+            case 'C': /* --volconf */
+                load_config(red_optarg, gaRedVolConf);
+                break;
             case 'H': /* --help */
                 goto Help;
             case '?': /* Unknown or ambiguous option */
@@ -160,6 +167,8 @@ int main(
         fprintf(stderr, "Missing volume argument\n");
         goto BadOpt;
     }
+
+    dump_config(gaRedVolConf);
 
     bVolNum = RedFindVolumeNumber(argv[red_optind]);
     if(bVolNum == REDCONF_VOLUME_COUNT)
@@ -266,6 +275,8 @@ static void Usage(
 "      Specify the inode count to use.  If unspecified, the inode count in the\n"
 "      volume configuration is used.  A value of \"auto\" may be specified to\n"
 "      automatically compute an appropriate inode count for the volume size.\n"
+"  --volconf=confname, -C confname\n"
+"      Specify the volume config file.\n"
 "  --help, -H\n"
 "      Prints this usage text and exits.\n\n";
 
