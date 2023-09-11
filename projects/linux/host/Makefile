@@ -9,7 +9,8 @@ P_CFLAGS=-I ../../../../sfram_drv_test/DUKE_SDK/ag6r/linux/sysroot/usr/include
 LDFLAGS=-L ../../../../sfram_drv_test/DUKE_SDK/ag6r/linux/sysroot/usr/lib
 #LDFLAGS+=-s
 #B_CFLAGS=-s
-LDFLAGS+=-g
+B_CFLAGS=-O0 -g -gdwarf-2 -gstrict-dwarf
+LDFLAGS+=-g -gdwarf-2 -gstrict-dwarf
 B_DEBUG = 1
 
 P_BASEDIR ?= ../../..

@@ -168,7 +168,7 @@ int main(
         goto BadOpt;
     }
 
-    dump_config(gaRedVolConf);
+    //dump_config(gaRedVolConf);
 
     bVolNum = RedFindVolumeNumber(argv[red_optind]);
     if(bVolNum == REDCONF_VOLUME_COUNT)

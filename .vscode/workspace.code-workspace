@@ -16,9 +16,8 @@
 	    "dg.ag6r.target_root": "/mnt/romroot",
     	"dg.ag6r.target_gdbserver_port": "10000",
 		"files.associations": {
-			"*.json": "jsonc",
-			"fuse.h": "c",
-			"stdlib.h": "c"
+			"*.json": "jsonc"
+
 		}
 	},
 }

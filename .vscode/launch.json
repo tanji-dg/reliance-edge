@@ -4,16 +4,23 @@
     // 詳細情報は次を確認してください: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-
         {
             "name": "(arm-none-linux-gnueabihf-gdb) 起動",
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceRoot}/projects/linux/host/redfuse",
-            "args": [ "--vol=0", "--dev=/dev/nbd0", "/tmp/sfram",  "-f", "-d" ],
+            //"program": "${workspaceRoot}/projects/linux/host/redfmt",
+            //"args": [],
+            //"args": [ "--vol=0", "--dev=/dev/nbd0", "/mnt/sfram0", "-C", "redvol.conf", "-f", "-d", "-o", "direct_io" ],
+            "args": [ "--vol=0", "--dev=/dev/nbd0", "/mnt/sfram0", "-C", "redvol.conf", "-f", "-d" ],
             "stopAtEntry": true,
             "cwd": "${workspaceFolder}",
-            "environment": [],
+            "environment": [
+                {
+                    "name": "LD_LIBRARY_PATH",
+                    "value": ".",
+                }
+            ],
             "externalConsole": true,
             "subProcess": true, // マルチスレッド
             "MIMode": "gdb",
@@ -37,6 +44,7 @@
                 {
                     "description": "起動ファイル指定(-gdb-set remote)",
                     "text": "-gdb-set remote exec-file /home/root/redfuse",
+                    //"text": "-gdb-set remote exec-file /home/root/redfmt",
                     "ignoreFailures": false
                 }
             ],

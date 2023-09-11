@@ -9,8 +9,6 @@
         // 他の除外ディレクトリもここに追加可能
     },
     "files.associations": {
-        "*.json": "jsonc",
-        "stdlib.h": "c",
-        "fuse.h": "c"
+       "*.json": "jsonc"
     },
 }

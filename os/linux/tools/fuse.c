@@ -63,6 +63,7 @@
 #include <redtoolcmn.h>
 #include <redvolume.h>
 
+#include "config.h"
 
 #if REDCONF_POSIX_OWNER_PERM == 1
 
@@ -102,6 +103,7 @@ typedef struct
 {
     const char *pszVolSpec;
     const char *pszBDevSpec;
+    const char *pszVolConf;
     int         fFormat;    /* Logically a boolean but type must be int */
     int         fShowHelp;  /* Same as above */
 } REDOPTIONS;
@@ -194,6 +196,8 @@ static const struct fuse_opt gaOptionSpec[] =
     OPTION("--dev=%s", pszBDevSpec),
     OPTION("-D %s", pszBDevSpec),
     OPTION("--format", fFormat),
+    OPTION("--volconf=%s", pszVolConf),
+    OPTION("-C %s", pszVolConf),
     OPTION("-h", fShowHelp),
     OPTION("--help", fShowHelp),
     FUSE_OPT_END
@@ -214,6 +218,8 @@ static void show_help(
 "                               path and name of a file disk (e.g., red.bin);\n"
 "                               or an OS-specific reference to a device (on\n"
 "                               Linux, a device file like /dev/sdb).\n"
+"    --volconf=confname, -C confname\n"
+"                               Specify the volume config file.\n"
 "    --format                   Format the volume before mounting with fuse.\n"
 "\n");
 }
@@ -281,6 +287,11 @@ int main(
         fShowHelp = true;
         goto ShowHelp;
       #endif
+    }
+
+    if(gOptions.pszVolConf != NULL)
+    {
+        load_config(gOptions.pszVolConf, gaRedVolConf);
     }
 
     assert(gOptions.pszVolSpec != NULL);
