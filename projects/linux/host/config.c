@@ -69,7 +69,7 @@ void dump_config(const VOLCONF volconf[])
      /* 64-bit */
         printf("%d %ld %ld %d %d %d %d %s\n",
 #else
-        printf("%d %lld %lld %d %d %d %s\n",
+        printf("%d %lld %lld %d %d %d %d %s\n",
 #endif 
                volconf[i].ulSectorSize,
                volconf[i].ullSectorCount,
