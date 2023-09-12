@@ -52,7 +52,7 @@ $(P_BASEDIR)/os/$(P_OS)/tools/fuse.$(B_OBJEXT):		$(P_BASEDIR)/os/$(P_OS)/tools/f
 $(P_PROJDIR)/redconf.$(B_OBJEXT):	$(P_CONFDIR)/redconf.c
 
 libred.so: $(REDDRIVOBJ) $(REDTOOLOBJ)
-	$(B_CC) $(B_CFLAGS) -shared $^ -o $@
+	$(B_CC) $(B_CFLAGS) $(LDFLAGS) -shared $^ -o $@
 
 redfmt: $(P_BASEDIR)/os/$(P_OS)/tools/$(REDTOOLPREFIX)fmt.$(B_OBJEXT) libred.so
 	$(B_LDCMD)
