@@ -18,7 +18,7 @@ B_CFLAGS +=-g
 else
 B_CFLAGS +=-O
 endif
-B_LDCMD=$(B_CC) $(B_CFLAGS) $^ -o $@
+B_LDCMD=$(B_CC) $(B_CFLAGS) $(LDFLAGS) $^ -o $@
 B_CLEANEXTRA=
 
 
