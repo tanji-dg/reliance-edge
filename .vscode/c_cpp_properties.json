@@ -7,10 +7,10 @@
                 //"${workspaceFolder:root}/DUKE_SDK/ag6r/linux/sysroot/usr/include"
             ],
             "windowsSdkVersion": "10.0.19041.0",
-            "compilerPath": "/usr/bin/arm-none-eabi-gcc",
+            "compilerPath": "/usr/bin/gcc",
             "cStandard": "c11",
             "cppStandard": "c++11",
-            "intelliSenseMode": "linux-gcc-arm",
+            "intelliSenseMode": "linux-gcc-x64",
             "configurationProvider": "ms-vscode.makefile-tools"
         }
     ],
