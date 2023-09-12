@@ -434,7 +434,9 @@ PARAMSTATUS FsstressParseParams(
     char           *argv[],
     FSSTRESSPARAM  *pParam,
     uint8_t        *pbVolNum,
-    const char    **ppszDevice)
+    const char    **ppszDevice,
+    const char    **ppszVolConf
+    )
 {
     int             c;
     uint8_t         bVolNum;
@@ -448,6 +450,7 @@ PARAMSTATUS FsstressParseParams(
         { "verbose", red_no_argument, NULL, 'v' },
         { "dev", red_required_argument, NULL, 'D' },
         { "help", red_no_argument, NULL, 'H' },
+        { "volconf", red_required_argument, NULL, 'C' },
         { NULL }
     };
 
@@ -469,7 +472,7 @@ PARAMSTATUS FsstressParseParams(
     */
     FsstressDefaultParams(pParam);
 
-    while((c = RedGetoptLong(argc, argv, "cl:n:rs:vD:H", aLongopts, NULL)) != -1)
+    while((c = RedGetoptLong(argc, argv, "cl:n:rs:vD:C:H", aLongopts, NULL)) != -1)
     {
         switch(c)
         {
@@ -495,6 +498,12 @@ PARAMSTATUS FsstressParseParams(
                 if(ppszDevice != NULL)
                 {
                     *ppszDevice = red_optarg;
+                }
+                break;
+            case 'C': /* --volconf */
+                if(ppszVolConf != NULL)
+                {
+                    *ppszVolConf = red_optarg;
                 }
                 break;
             case 'H': /* --help */

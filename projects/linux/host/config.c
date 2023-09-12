@@ -59,7 +59,12 @@ void dump_config(const VOLCONF volconf[])
 {
     for (int i = 0; i < REDCONF_VOLUME_COUNT; i++)
     {
+#if __x86_64__
+     /* 64-bit */
+        printf("%d %ld %ld %d %d %d %s\n",
+#else
         printf("%d %lld %lld %d %d %d %s\n",
+#endif 
                volconf[i].ulSectorSize,
                volconf[i].ullSectorCount,
                volconf[i].ullSectorOffset,

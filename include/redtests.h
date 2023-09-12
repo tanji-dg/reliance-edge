@@ -110,7 +110,7 @@ typedef struct
     bool        fVerbose;   /**< --verbose */
 } FSSTRESSPARAM;
 
-PARAMSTATUS FsstressParseParams(int argc, char *argv[], FSSTRESSPARAM *pParam, uint8_t *pbVolNum, const char **ppszDevice);
+PARAMSTATUS FsstressParseParams(int argc, char *argv[], FSSTRESSPARAM *pParam, uint8_t *pbVolNum, const char **ppszDevice, const char **ppszVolConf);
 void FsstressDefaultParams(FSSTRESSPARAM *pParam);
 int FsstressStart(const FSSTRESSPARAM *pParam);
 #endif

@@ -35,6 +35,8 @@
 #include <redposix.h>
 #include <redvolume.h>
 
+#include "host/config.h"
+
 
 /** @brief Entry point for the fsstress test.
 */
@@ -47,8 +49,9 @@ int main(
     FSSTRESSPARAM   param;
     uint8_t         bVolNum;
     const char     *pszDrive;
+    const char     *pszVolConf;
 
-    pstatus = FsstressParseParams(argc, argv, &param, &bVolNum, &pszDrive);
+    pstatus = FsstressParseParams(argc, argv, &param, &bVolNum, &pszDrive, &pszVolConf);
     if(pstatus == PARAMSTATUS_OK)
     {
         const char *pszVolume = gaRedVolConf[bVolNum].pszPathPrefix;
@@ -59,6 +62,11 @@ int main(
         {
             fprintf(stderr, "Unexpected error %d from red_init()\n", (int)red_errno);
             exit(red_errno);
+        }
+
+        if(pszVolConf != NULL)
+        {
+            load_config(pszVolConf, gaRedVolConf);
         }
 
         if(pszDrive != NULL)
