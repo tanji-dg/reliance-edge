@@ -6,10 +6,8 @@
 #  See toolset.mk for documentation on which definitions are required and
 #  their intended use.
 #
-#B_CC=$(CROSS_COMPILE)gcc
-#B_LIB=$(CROSS_COMPILE)ar rcsD
 B_CC=$(CC)
-B_LIB=$(AR)
+B_LIB=$(AR) rcsD
 B_LIBOUT=
 B_OBJEXT ?= o
 B_LIBEXT ?= a
