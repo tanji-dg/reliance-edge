@@ -56,7 +56,7 @@ SONAME=$(LIBNAME).1
 LIBRED=$(SONAME).0.0
 
 $(LIBRED): $(REDDRIVOBJ) $(REDTOOLOBJ)
-	$(B_CC) $(B_CFLAGS) -shared -Wl,-soname=$(SONAME) $^ -o $@
+	$(B_CC) $(B_CFLAGS) $(LDFLAGS) -shared -Wl,-soname=$(SONAME) $^ -o $@
 
 redfmt: $(P_BASEDIR)/os/$(P_OS)/tools/$(REDTOOLPREFIX)fmt.$(B_OBJEXT) $(LIBRED)
 	$(B_LDCMD)
