@@ -143,6 +143,7 @@ int main(
                 break;
             case 'C': /* --volconf */
                 load_config(red_optarg, gaRedVolConf);
+                //dump_config(gaRedVolConf);
                 break;
             case 'H': /* --help */
                 goto Help;

@@ -1,7 +1,7 @@
 B_OBJEXT ?= to
 
 P_CFLAGS +=-Werror
-P_CFLAGS += -D_FILE_OFFSET_BITS=64 -D_XOPEN_SOURCE=500 -D_POSIX_C_SOURCE=200809
+#P_CFLAGS += -D_FILE_OFFSET_BITS=64 -D_XOPEN_SOURCE=500 -D_POSIX_C_SOURCE=200809
 
 # Don't build redfuse by default since it relies on libfuse-dev,
 # but do build redfuse if "make all" is explicitly run.
@@ -20,7 +20,7 @@ include $(P_BASEDIR)/build/hostos.mk
 include $(P_BASEDIR)/build/toolset.mk
 include $(P_BASEDIR)/build/reliance.mk
 
-INCLUDES=$(REDDRIVINC)
+INCLUDES+=$(REDDRIVINC)
 
 # FUSE driver reimplements the UID/GID OS service in fuse.c.
 REDFUSEDRIVOBJ := $(subst $(P_BASEDIR)/os/$(P_OS)/services/osuidgid.$(B_OBJEXT),,$(REDDRIVOBJ))
@@ -65,7 +65,7 @@ redimgbld: $(IMGBLDOBJ) $(LIBRED)
 	$(B_LDCMD)
 
 redfuse: $(P_BASEDIR)/os/$(P_OS)/tools/fuse.$(B_OBJEXT) $(LIBRED)
-	$(B_CC) $^ $(LDFLAGS) -lfuse -o $@
+	$(B_CC) $^ $(LDFLAGS) $(LIBS) -o $@
 
 .PHONY: clean
 clean:

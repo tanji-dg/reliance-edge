@@ -4,6 +4,7 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**",
+                "/usr/include/fuse3"
                 //"${workspaceFolder:root}/DUKE_SDK/ag6r/linux/sysroot/usr/include"
             ],
             "windowsSdkVersion": "10.0.19041.0",

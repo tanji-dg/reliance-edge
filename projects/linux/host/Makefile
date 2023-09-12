@@ -3,6 +3,11 @@
 #
 B_HOSTOS=linux
 OS=linux
+B_INCLUDES := $(shell pkg-config --cflags fuse3)
+B_LIBS := $(shell pkg-config --libs fuse3)
+
+INCLUDES ?= $(B_INCLUDES)
+LIBS ?= $(B_LIBS)
 
 P_BASEDIR ?= ../../..
 P_PROJDIR ?= $(P_BASEDIR)/projects/linux/host

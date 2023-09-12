@@ -14,7 +14,7 @@ B_LIBEXT ?= a
 B_CINCCMD = -I
 B_CFLAGS +=-Wall $(P_CFLAGS)
 ifneq ($(B_DEBUG),0)
-B_CFLAGS +=-g
+B_CFLAGS +=-g -O0
 else
 B_CFLAGS +=-O
 endif

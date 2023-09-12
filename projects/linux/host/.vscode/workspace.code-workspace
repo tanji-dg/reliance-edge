@@ -5,7 +5,17 @@
 		},
 		{
 			"path": "../../../.."
+		},
+		{
+			"path": "../../../../../libfuse"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"files.associations": {
+			"*.json": "jsonc",
+			"fuse.h": "c",
+			"stdlib.h": "c",
+			"redvolume.h": "c"
+		}
+	}
 }

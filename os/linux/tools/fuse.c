@@ -27,7 +27,7 @@
     @brief Implements a Reliance Edge FUSE (File System in User Space) port
            for Linux.
 */
-#define FUSE_USE_VERSION 29
+#define FUSE_USE_VERSION 39
 #include <fuse.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -109,17 +109,17 @@ typedef struct
 } REDOPTIONS;
 
 
-static int fuse_red_getattr(const char *pszPath, struct stat *stbuf);
+static int fuse_red_getattr(const char *pszPath, struct stat *stbuf, struct fuse_file_info *pFileInfo);
 static int fuse_red_access(const char *pszPath, int mask);
 static int fuse_red_create(const char *pszPath, mode_t mode, struct fuse_file_info *pFileInfo);
 static int fuse_red_mkdir(const char *pszPath, mode_t mode);
 static int fuse_red_unlink(const char *pszPath);
 static int fuse_red_rmdir(const char *pszPath);
-static int fuse_red_rename(const char *pszOldPath, const char *pszNewPath);
+static int fuse_red_rename(const char *pszOldPath, const char *pszNewPath, unsigned int flags);
 static int fuse_red_link(const char *pszOldPath, const char *pszNewPath);
-static int fuse_red_chmod(const char *pszPath, mode_t mode);
-static int fuse_red_chown(const char *pszPath, uid_t uid, gid_t gid);
-static int fuse_red_truncate(const char *pszPath, off_t size);
+static int fuse_red_chmod(const char *pszPath, mode_t mode, struct fuse_file_info *pFileInfo);
+static int fuse_red_chown(const char *pszPath, uid_t uid, gid_t gid, struct fuse_file_info *pFileInfo);
+static int fuse_red_truncate(const char *pszPath, off_t size, struct fuse_file_info *pFileInfo);
 static int fuse_red_open(const char *pszPath, struct fuse_file_info *pFileInfo);
 static int fuse_red_symlink(const char *pszPath, const char *pszSymlink);
 static int fuse_red_readlink(const char *pszPath, char *pszBuffer, size_t nBufferSize);
@@ -128,14 +128,13 @@ static int fuse_red_write(const char *pszPath, const char *pcBuf, size_t size, o
 static int fuse_red_statfs(const char *pszPath, struct statvfs *stbuf);
 static int fuse_red_release(const char *pszPath, struct fuse_file_info *pFileInfo);
 static int fuse_red_fsync(const char *pszPath, int type, struct fuse_file_info *pFileInfo);
-static int fuse_red_readdir(const char *pszPath, void *buf, fuse_fill_dir_t filler, off_t offset, struct fuse_file_info *pFileInfo);
+static int fuse_red_readdir(const char *pszPath, void *buf, fuse_fill_dir_t filler, off_t offset, struct fuse_file_info *pFileInfo, enum fuse_readdir_flags flags);
 static int fuse_red_fsyncdir(const char *pszPath, int type, struct fuse_file_info *pFileInfo);
-static void *fuse_red_init(struct fuse_conn_info *conn);
+static void *fuse_red_init(struct fuse_conn_info *conn, struct fuse_config *cfg);
 static void fuse_red_destroy(void *context);
 static int fuse_red_ftruncate(const char *pszPath, off_t size, struct fuse_file_info *pFileInfo);
-static int fuse_red_fgetattr(const char *pszPath, struct stat *stbuf, struct fuse_file_info *pFileInfo);
-static int fgetattr_sub(struct stat *stbuf,  struct fuse_file_info *pFileInfo);
-static int fuse_red_utimens(const char *pszPath, const struct timespec tv[2]);
+static int fgetattr_sub(struct stat *stbuf, int32_t iFd);
+static int fuse_red_utimens(const char *pszPath, const struct timespec tv[2], struct fuse_file_info *pFileInfo);
 static void redstat_to_stat(const REDSTAT *pRedSB, struct stat *pSB);
 static mode_t redmode_to_mode(uint16_t uRedMode);
 static int rederrno_to_errno(int32_t rederrno);
@@ -173,8 +172,7 @@ static struct fuse_operations red_oper =
     .fsyncdir = fuse_red_fsyncdir,
     .init = fuse_red_init,
     .destroy = fuse_red_destroy,
-    .ftruncate = fuse_red_ftruncate,
-    .fgetattr = fuse_red_fgetattr,
+    .truncate = fuse_red_ftruncate,
     .utimens = fuse_red_utimens
 };
 
@@ -355,11 +353,14 @@ int main(
 
 
 static int fuse_red_getattr(
-    const char     *pszPath,
-    struct stat    *stbuf)
+    const char            *pszPath,
+    struct stat           *stbuf,
+    struct fuse_file_info *pFileInfo)
 {
     int             result;
     int32_t         iFd;
+
+    (void)pFileInfo;
 
     REDFS_LOCK();
 
@@ -370,11 +371,7 @@ static int fuse_red_getattr(
     }
     else
     {
-        struct fuse_file_info fileInfo;
-
-        fileInfo.fh = (uint64_t)iFd;
-
-        result = fgetattr_sub(stbuf, &fileInfo);
+        result = fgetattr_sub(stbuf, iFd);
 
         if((red_close(iFd) != 0) && (result == 0))
         {
@@ -404,7 +401,7 @@ static int fuse_red_access(
     struct stat st;
     int         result;
 
-    result = fuse_red_getattr(pszPath, &st);
+    result = fuse_red_getattr(pszPath, &st, 0);
 
   #if REDCONF_POSIX_OWNER_PERM == 1
     if(result == 0)
@@ -581,8 +578,9 @@ static int fuse_red_rmdir(
 
 
 static int fuse_red_rename(
-    const char *pszOldPath,
-    const char *pszNewPath)
+    const char  *pszOldPath,
+    const char  *pszNewPath,
+    unsigned int flags)
 {
   #if (REDCONF_READ_ONLY == 0) && (REDCONF_API_POSIX_RENAME == 1)
     int         result;
@@ -600,6 +598,9 @@ static int fuse_red_rename(
 
     if(result == 0)
     {
+        // RENAME_NOREPLACE
+        // RENAME_EXCHANGE
+        (void)flags;
         if(red_rename(szOldRedPath, szNewRedPath) != 0)
         {
             result = rederrno_to_errno(red_errno);
@@ -657,12 +658,15 @@ static int fuse_red_link(
 
 
 static int fuse_red_chmod(
-    const char *pszPath,
-    mode_t      mode)
+    const char            *pszPath,
+    mode_t                 mode,
+    struct fuse_file_info *pFileInfo)
 {
   #if (REDCONF_READ_ONLY == 0) && (REDCONF_POSIX_OWNER_PERM == 1)
     int         result;
     char        szRedPath[PATH_MAX];
+
+    (void)pFileInfo;
 
     REDFS_LOCK();
 
@@ -683,6 +687,7 @@ static int fuse_red_chmod(
     */
     (void)pszPath;
     (void)mode;
+    (void)pFileInfo;
 
     return -ENOSYS;
   #endif
@@ -690,13 +695,16 @@ static int fuse_red_chmod(
 
 
 static int fuse_red_chown(
-    const char *pszPath,
-    uid_t       uid,
-    gid_t       gid)
+    const char            *pszPath,
+    uid_t                  uid,
+    gid_t                  gid,
+    struct fuse_file_info *pFileInfo)
 {
   #if (REDCONF_READ_ONLY == 0) && (REDCONF_POSIX_OWNER_PERM == 1)
     int         result;
     char        szRedPath[PATH_MAX];
+
+    (void)pFileInfo;
 
     REDFS_LOCK();
 
@@ -716,6 +724,7 @@ static int fuse_red_chown(
     (void)pszPath;
     (void)uid;
     (void)gid;
+    (void)pFileInfo;
 
     return -ENOSYS;
   #endif
@@ -723,12 +732,15 @@ static int fuse_red_chown(
 
 
 static int fuse_red_truncate(
-    const char *pszPath,
-    off_t       size)
+    const char            *pszPath,
+    off_t                  size,
+    struct fuse_file_info *pFileInfo)
 {
   #if (REDCONF_READ_ONLY == 0) && (REDCONF_API_POSIX_FTRUNCATE == 1)
     int32_t     iFd;
     int         result = 0;
+
+    (void)pFileInfo;
 
     if(size < 0)
     {
@@ -761,6 +773,7 @@ static int fuse_red_truncate(
   #else
     (void)pszPath;
     (void)size;
+    (void)pFileInfo;
 
     return -ENOSYS;
   #endif
@@ -1064,7 +1077,8 @@ static int fuse_red_readdir(
     void                   *pBuf,
     fuse_fill_dir_t         filler,
     off_t                   offset,
-    struct fuse_file_info  *pFileInfo)
+    struct fuse_file_info  *pFileInfo,
+    enum fuse_readdir_flags flags)
 {
   #if REDCONF_API_POSIX_READDIR == 1
     REDDIR                 *pDir;
@@ -1111,7 +1125,7 @@ static int fuse_red_readdir(
             /*  Supplying 0 as the "offset" of all dirents lets filler() know
                 that it should read all directory entries at once.
             */
-            if(filler(pBuf, pDirent->d_name, &st, 0))
+            if(filler(pBuf, pDirent->d_name, &st, 0, 0))
             {
                 break;
             }
@@ -1178,9 +1192,11 @@ static int fuse_red_fsyncdir(
 
 
 static void *fuse_red_init(
-    struct fuse_conn_info  *conn)
+    struct fuse_conn_info  *conn,
+    struct fuse_config     *cfg)
 {
     (void)conn;
+    (void)cfg;
 
     REDFS_LOCK();
 
@@ -1255,36 +1271,14 @@ static int fuse_red_ftruncate(
 }
 
 
-static int fuse_red_fgetattr(
-    const char             *pszPath,
-    struct stat            *stbuf,
-    struct fuse_file_info  *pFileInfo)
-{
-    int                     result;
-
-    (void)pszPath;
-    assert(pFileInfo != NULL);
-
-    REDFS_LOCK();
-
-    result = fgetattr_sub(stbuf, pFileInfo);
-
-    REDFS_UNLOCK();
-
-    return result;
-}
-
-
 static int fgetattr_sub(
-    struct stat            *stbuf,
-    struct fuse_file_info  *pFileInfo)
+    struct stat *stbuf,
+    int32_t     iFd)
 {
     int                     result = 0;
     REDSTAT                 redstbuf;
 
-    assert(pFileInfo != NULL);
-
-    if(red_fstat((int32_t)pFileInfo->fh, &redstbuf) != 0)
+    if(red_fstat(iFd, &redstbuf) != 0)
     {
         result = rederrno_to_errno(red_errno);
     }
@@ -1299,11 +1293,14 @@ static int fgetattr_sub(
 
 static int fuse_red_utimens(
     const char             *pszPath,
-    const struct timespec   tv[2])
+    const struct timespec   tv[2],
+    struct fuse_file_info  *pFileInfo)
 {
   #if (REDCONF_READ_ONLY == 0) && (REDCONF_INODE_TIMESTAMPS == 1)
     int                     result;
     char                    szRedPath[PATH_MAX];
+
+    (void)pFileInfo;
 
     REDFS_LOCK();
 
@@ -1356,6 +1353,7 @@ static int fuse_red_utimens(
     */
     (void)pszPath;
     (void)tv;
+    (void)pFileInfo;
     return -ENOSYS;
   #endif
 }
