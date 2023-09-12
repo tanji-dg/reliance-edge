@@ -1,7 +1,7 @@
 B_OBJEXT ?= to
 
 P_CFLAGS +=-Werror
-#P_CFLAGS += -D_FILE_OFFSET_BITS=64 -D_XOPEN_SOURCE=500 -D_POSIX_C_SOURCE=200809
+P_CFLAGS += -D_FILE_OFFSET_BITS=64 -D_XOPEN_SOURCE=500 -D_POSIX_C_SOURCE=200809
 
 # Don't build redfuse by default since it relies on libfuse-dev,
 # but do build redfuse if "make all" is explicitly run.
