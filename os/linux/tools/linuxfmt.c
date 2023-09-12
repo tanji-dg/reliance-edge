@@ -69,6 +69,7 @@ int main(
         { "inodes", red_required_argument, NULL, 'N' },
         { "dev", red_required_argument, NULL, 'D' },
         { "volconf", red_required_argument, NULL, 'C' },
+        { "dumpconf", red_required_argument, NULL, 'd' },
         { "help", red_no_argument, NULL, 'H' },
         { NULL }
     };
@@ -82,7 +83,7 @@ int main(
         goto Help;
     }
 
-    while((c = RedGetoptLong(argc, argv, "V:N:D:C:H", aLongopts, NULL)) != -1)
+    while((c = RedGetoptLong(argc, argv, "V:N:D:C:Hd", aLongopts, NULL)) != -1)
     {
         switch(c)
         {
@@ -143,7 +144,9 @@ int main(
                 break;
             case 'C': /* --volconf */
                 load_config(red_optarg, gaRedVolConf);
-                //dump_config(gaRedVolConf);
+                break;
+            case 'd': /* --dumpconf */
+                dump_config(gaRedVolConf);
                 break;
             case 'H': /* --help */
                 goto Help;

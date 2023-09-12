@@ -105,6 +105,10 @@ typedef struct
     */
     const char *pszPathPrefix;
   #endif
+
+    /** The active automatic transaction mask.
+    */
+    uint32_t    ulTransMask;
 } VOLCONF;
 
 #if REDOSCONF_MUTABLE_VOLCONF == 1

@@ -4,6 +4,7 @@
 #include <redtypes.h>
 #include <redmacs.h>
 #include <redvolume.h>
+#include <redapimacs.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "config.h"
@@ -23,18 +24,22 @@ void load_config(const char *config_path, VOLCONF volconf[])
         if (buf[0] == '#' || buf[0] == '\0' || buf[0] == '\n')
             continue;
 
-        int value[6];
-        int ret = sscanf(buf, "%d %d %d %d %d %d %32s",
+        int value[7];
+        int ret = sscanf(buf, "%d %d %d %d %d %d %d %32s",
                          &value[0],
                          &value[1],
                          &value[2],
                          &value[3],
                          &value[4],
                          &value[5],
+                         &value[6],
                          &volume_string[index][0]);
 
-        if (ret != 7)
+        if (ret != 8)
+        {
+            fprintf(stderr, "load_conig: wrong format\n");
             continue;
+        }
 
         if (index >= REDCONF_VOLUME_COUNT)
         {
@@ -48,6 +53,7 @@ void load_config(const char *config_path, VOLCONF volconf[])
         volconf[index].fAtomicSectorWrite = value[3];
         volconf[index].ulInodeCount = value[4];
         volconf[index].bBlockIoRetries = value[5];
+        volconf[index].ulTransMask = value[6] & RED_TRANSACT_MASK;
         volconf[index].pszPathPrefix = volume_string[index];
 
         index++;
@@ -61,7 +67,7 @@ void dump_config(const VOLCONF volconf[])
     {
 #if __x86_64__
      /* 64-bit */
-        printf("%d %ld %ld %d %d %d %s\n",
+        printf("%d %ld %ld %d %d %d %d %s\n",
 #else
         printf("%d %lld %lld %d %d %d %s\n",
 #endif 
@@ -71,6 +77,7 @@ void dump_config(const VOLCONF volconf[])
                volconf[i].fAtomicSectorWrite,
                volconf[i].ulInodeCount,
                volconf[i].bBlockIoRetries,
+               volconf[i].ulTransMask,
                volconf[i].pszPathPrefix);
     }
 }

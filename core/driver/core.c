@@ -160,7 +160,7 @@ REDSTATUS RedCoreInit(void)
       #endif /* REDCONF_API_POSIX == 1 */
 
       #if REDCONF_READ_ONLY == 0
-        gaRedVolume[bVolNum].ulTransMask = REDCONF_TRANSACT_DEFAULT;
+        gaRedVolume[bVolNum].ulTransMask = gaRedVolConf[bVolNum].ulTransMask;
       #endif
         gaRedVolume[bVolNum].ullMaxInodeSize = INODE_SIZE_MAX;
     }
