@@ -245,18 +245,23 @@ int main(
 
     (void)argc;
 
+    /*  Parse options
+    */
+    if(fuse_opt_parse(&args, &gOptions, gaOptionSpec, NULL) == -1)
+    {
+        return 1;
+    }
+
+    if(gOptions.pszVolConf != NULL)
+    {
+        load_config(gOptions.pszVolConf, gaRedVolConf);
+    }
+
     /*  Initialize immediately to ensure the output is printed.
     */
     if(red_init() != 0)
     {
         fprintf(stderr, "Unexpected error %d from red_init()\n", (int)red_errno);
-        return 1;
-    }
-
-    /*  Parse options
-    */
-    if(fuse_opt_parse(&args, &gOptions, gaOptionSpec, NULL) == -1)
-    {
         return 1;
     }
 
@@ -285,11 +290,6 @@ int main(
         fShowHelp = true;
         goto ShowHelp;
       #endif
-    }
-
-    if(gOptions.pszVolConf != NULL)
-    {
-        load_config(gOptions.pszVolConf, gaRedVolConf);
     }
 
     assert(gOptions.pszVolSpec != NULL);
