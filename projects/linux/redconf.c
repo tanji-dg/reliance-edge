@@ -16,7 +16,4 @@ VOLCONF gaRedVolConf[REDCONF_VOLUME_COUNT] =
     { 0U, 0U, 0U, false, 0U, 0U, "VOL0:" },
     { 0U, 0U, 0U, false, 0U, 0U, "VOL1:" },
     { 0U, 0U, 0U, false, 0U, 0U, "VOL2:" },
-    { 0U, 0U, 0U, false, 0U, 0U, "VOL3:" },
-    { 0U, 0U, 0U, false, 0U, 0U, "VOL4:" },
-    { 0U, 0U, 0U, false, 0U, 0U, "VOL5:" },
 };
