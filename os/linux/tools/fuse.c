@@ -1101,7 +1101,7 @@ static int fuse_red_readdir(
         }
     }
 
-    if(result == 0)
+    if(result == 0 && pDir != NULL)
     {
         while(true)
         {
