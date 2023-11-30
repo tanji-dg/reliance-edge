@@ -1131,7 +1131,7 @@ static int fuse_red_readdir(
             }
         }
 
-        if((red_closedir(pDir) != 0) && (result == 0))
+        if(pDir != NULL && (red_closedir(pDir) != 0) && (result == 0))
         {
             result = rederrno_to_errno(red_errno);
         }
