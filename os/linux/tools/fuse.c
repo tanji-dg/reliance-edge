@@ -1081,7 +1081,7 @@ static int fuse_red_readdir(
     enum fuse_readdir_flags flags)
 {
   #if REDCONF_API_POSIX_READDIR == 1
-    REDDIR                 *pDir;
+    REDDIR                 *pDir = NULL;
     int                     result;
     char                    szRedPath[PATH_MAX];
 
@@ -1101,7 +1101,7 @@ static int fuse_red_readdir(
         }
     }
 
-    if(result == 0 && pDir != NULL)
+    if(result == 0)
     {
         while(true)
         {
@@ -1131,7 +1131,7 @@ static int fuse_red_readdir(
             }
         }
 
-        if(pDir != NULL && (red_closedir(pDir) != 0) && (result == 0))
+        if((red_closedir(pDir) != 0) && (result == 0))
         {
             result = rederrno_to_errno(red_errno);
         }
